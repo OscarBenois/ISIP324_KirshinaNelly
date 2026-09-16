@@ -72,11 +72,11 @@ namespace ISIP324_KirshinaNelly
                         case "4":
                             ConvertMoney();
                             break;
-                        //case "5":
-                        //    NameSearch();
-                        //    break;
-                        //case "0":
-                        //    return;
+                        case "5":
+                            NameSearch();
+                            break;
+                        case "0":
+                            return;
                         default:
                             Console.WriteLine("Ошибка. Введите число от 0 до 5");
                             break;
@@ -158,7 +158,18 @@ sortedProducts = new List<string>(products);
                     Console.WriteLine($"{products[i]} - {costs[i] / rate}");
                 }
             }
-            
+            void NameSearch()
+            {
+                Console.WriteLine("Введите слово для поиска:");
+                string forSearch = Console.ReadLine();
+                for (int i = 0; i < numberofoperations; i++)
+                {
+                    if (forSearch == products[i])
+                    {
+                        Console.WriteLine($"Найдено совпадение: {products[i]} - {costs[i]} рублей");
+                    }
+                }
+            }
         }
     }
 }
