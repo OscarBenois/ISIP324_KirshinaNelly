@@ -63,9 +63,9 @@ namespace ISIP324_KirshinaNelly
                         case "1":
                             DisplayData();
                             break;
-                        //case "2":
-                        //    Statistics();
-                        //    break;
+                        case "2":
+                            Statistics();
+                            break;
                         //case "3":
                         //    BubbleSort();
                         //    break;
@@ -91,6 +91,20 @@ namespace ISIP324_KirshinaNelly
                     Console.WriteLine($"{i + 1}. {products[i]} - {costs[i]} рублей.");
                 }
             }
+            void Statistics()
+            {
+                double sum = costs.Sum();
+                double avg = costs.Average();
+                double max = costs.Max();
+                double min = costs.Min();
+
+                Console.WriteLine("Статистика:");
+                Console.WriteLine($"Сумма: {sum} рублей");
+                Console.WriteLine($"Среднее: {avg} рублей");
+                Console.WriteLine($"Максимальное: {max} рублей");
+                Console.WriteLine($"Минимальное: {min} рублей");
+            }
+            
         }
     }
 }
