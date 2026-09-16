@@ -66,9 +66,9 @@ namespace ISIP324_KirshinaNelly
                         case "2":
                             Statistics();
                             break;
-                        //case "3":
-                        //    BubbleSort();
-                        //    break;
+                        case "3":
+                            BubbleSort();
+                            break;
                         //case "4":
                         //    ConvertMoney();
                         //    break;
@@ -103,6 +103,34 @@ namespace ISIP324_KirshinaNelly
                 Console.WriteLine($"Среднее: {avg} рублей");
                 Console.WriteLine($"Максимальное: {max} рублей");
                 Console.WriteLine($"Минимальное: {min} рублей");
+            }
+            void BubbleSort()
+            {
+                List<string>
+sortedProducts = new List<string>(products);
+                List<double> sortedCosts = new List<double>(costs);
+
+                for (int i = 0; i < numberofoperations - 1; i++)
+                {
+                    for (int j = 0; j < numberofoperations - 1 - i; j++)
+                    {
+                        if (sortedCosts[j] > sortedCosts[j + 1])
+                        {
+                            double tempCost = sortedCosts[j];
+                            sortedCosts[j] = sortedCosts[j + 1];
+                            sortedCosts[j + 1] = tempCost;
+
+                            string tempProduct = sortedProducts[j];
+                            sortedProducts[j] = sortedProducts[j + 1];
+                            sortedProducts[j + 1] = tempProduct;
+                        }
+                    }
+                }
+                Console.WriteLine("Отсортировано по возрастанию цены:");
+                for (int i = 0; i < numberofoperations; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {sortedProducts[i]} - {sortedCosts[i]} рублей");
+                }
             }
             
         }
