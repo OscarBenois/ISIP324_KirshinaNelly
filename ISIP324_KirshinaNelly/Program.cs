@@ -60,9 +60,9 @@ namespace ISIP324_KirshinaNelly
                     string choice = Console.ReadLine();
                     switch (choice)
                     {
-                        //case "1":
-                        //    DisplayData();
-                        //    break;
+                        case "1":
+                            DisplayData();
+                            break;
                         //case "2":
                         //    Statistics();
                         //    break;
@@ -83,7 +83,14 @@ namespace ISIP324_KirshinaNelly
                     }
                 }
             }
-            
+            void DisplayData()
+            {
+                Console.WriteLine("Все траты:");
+                for (int i = 0; i < numberofoperations; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {products[i]} - {costs[i]} рублей.");
+                }
+            }
         }
     }
 }
