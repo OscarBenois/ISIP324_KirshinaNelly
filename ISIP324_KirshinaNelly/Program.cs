@@ -44,8 +44,46 @@ namespace ISIP324_KirshinaNelly
                     Console.WriteLine("Исспользуется неверный формат ввода. Попробуйте снова.");
                     i--;
                 }
-            
             }
+            ShowMenu();
+            void ShowMenu()
+            {
+                while (true)
+                {
+                    Console.WriteLine("Выберите пункт:");
+                    Console.WriteLine("1. Вывод данных");
+                    Console.WriteLine("2. Статистика (среднее, максимальное, минимальное, сумма)");
+                    Console.WriteLine("3. Сортировка по цене(Пузырьковая сортировка");
+                    Console.WriteLine("4. Конвертация валюты");
+                    Console.WriteLine("5. Поиск по названию");
+                    Console.WriteLine("0. Выход");
+                    string choice = Console.ReadLine();
+                    switch (choice)
+                    {
+                        //case "1":
+                        //    DisplayData();
+                        //    break;
+                        //case "2":
+                        //    Statistics();
+                        //    break;
+                        //case "3":
+                        //    BubbleSort();
+                        //    break;
+                        //case "4":
+                        //    ConvertMoney();
+                        //    break;
+                        //case "5":
+                        //    NameSearch();
+                        //    break;
+                        //case "0":
+                        //    return;
+                        default:
+                            Console.WriteLine("Ошибка. Введите число от 0 до 5");
+                            break;
+                    }
+                }
+            }
+            
         }
     }
 }
