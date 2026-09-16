@@ -69,9 +69,9 @@ namespace ISIP324_KirshinaNelly
                         case "3":
                             BubbleSort();
                             break;
-                        //case "4":
-                        //    ConvertMoney();
-                        //    break;
+                        case "4":
+                            ConvertMoney();
+                            break;
                         //case "5":
                         //    NameSearch();
                         //    break;
@@ -130,6 +130,32 @@ sortedProducts = new List<string>(products);
                 for (int i = 0; i < numberofoperations; i++)
                 {
                     Console.WriteLine($"{i + 1}. {sortedProducts[i]} - {sortedCosts[i]} рублей");
+                }
+            }
+            void ConvertMoney()
+            {
+                Console.WriteLine("Выберите валюту:");
+                Console.WriteLine("1. USD - 84,26 рублей");
+                Console.WriteLine("2. EUR - 97,87 рублей");
+
+                double rate = 1;
+                string chosenValue = Console.ReadLine();
+                switch (chosenValue)
+                {
+                    case "1":
+                        rate = 84.26;
+                        break;
+                    case "2":
+                        rate = 97.87;
+                        break;
+                    default:
+                        Console.WriteLine("Введён неправильный выбор");
+                        break;
+                }
+                Console.WriteLine("Конвертированная валюта:");
+                for (int i = 0; i < numberofoperations; i++)
+                {
+                    Console.WriteLine($"{products[i]} - {costs[i] / rate}");
                 }
             }
             
