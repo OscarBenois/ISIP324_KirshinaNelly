@@ -36,3 +36,12 @@ namespace ISIP324_KirshinaNelly
                 Console.WriteLine($"[Код: {code}] {name} | Цена: {price} | Остаток: {quantity} | Категория: {category} | В наличии: {(isThere ? "Да" : "Нет")}");
             }
         }
+        static List<Product> products = new List<Product>();
+
+        static void Main(string[] args)
+        {
+            products.Add(new Product("Кокакола 0.5", 150, 20, Category.Напитки));
+            products.Add(new Product("Багет", 50, 15, Category.Выпечка));
+            products.Add(new Product("Бургер", 200, 0, Category.Фастфуд));
+            products.Add(new Product("Мыло", 80, 10, Category.Хозтовары));
+            products.Add(new Product("Яблоки 1kg", 30, 30, Category.Еда));
