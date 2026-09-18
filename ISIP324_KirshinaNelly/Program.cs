@@ -58,4 +58,192 @@ namespace ISIP324_KirshinaNelly
                 Console.Write("Выберите пункт от 0 до 5:");
 
                 string choice = Console.ReadLine();
-                
+                switch (choice)
+                {
+                    case "1":
+                        AddProduct();
+                        break;
+                    case "2":
+                        RemoveProduct();
+                        break;
+                    case "3":
+                        SupplyProduct();
+                        break;
+                    case "4":
+                        SellProduct();
+                        break;
+                    case "5":
+                        SearchProduct();
+                        break;
+                    case "0":
+                        return;
+                    default:
+                        Console.WriteLine("Неверный ввод. Попробуйте снова");
+                        break;
+                }
+            }
+        }
+        static void AddProduct()
+        {
+            Console.WriteLine("\nДобавление товара");
+            string name = ReadString("Название: ");
+            double price = ReadDouble("Цена: ");
+            int quantity = ReadInt("Количество: ");
+            Category category = ReadCategory();
+
+            products.Add(new Product(name, price, quantity, category));
+            Console.WriteLine("Товар успешно добавлен.");
+        }
+
+        static void RemoveProduct()
+        {
+            Console.WriteLine("\nУдаление товара");
+            int code = ReadInt("Введите код товара для удаления: ");
+            Product found = FindByCode(code);
+
+            if (found != null)
+            {
+                products.Remove(found);
+                Console.WriteLine("Товар успешно удален");
+            }
+            else
+            {
+                Console.WriteLine("Товара с таким кодом не существует");
+            }
+        }
+
+        static void SupplyProduct()
+        {
+            Console.WriteLine("\nЗаказ поставки");
+            int code = ReadInt("Введите код товара: ");
+            int amount = ReadInt("Сколько единиц поставить: ");
+            Product found = FindByCode(code);
+
+            if (found != null)
+            {
+                found.quantity += amount;
+                Console.WriteLine("Поставка принята");
+            }
+            else
+            {
+                Console.WriteLine("Товара с таким кодом не существует");
+            }
+
+        }
+
+        static void SellProduct()
+        {
+            Console.WriteLine("\nПродажа товара");
+            int code = ReadInt("Введите код товара: ");
+            int amount = ReadInt("Сколько единиц продать: ");
+            Product found = FindByCode(code);
+
+            if (found != null)
+            {
+                if (found.quantity >= amount)
+                {
+                    found.quantity -= amount;
+                    Console.WriteLine("Продажа успешна");
+                }
+                else
+                {
+                    Console.WriteLine($"Ошибка: На складе только {found.quantity} шт., а вы хотите продать {amount} шт.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Товара с таким кодом не существует");
+            }
+
+        }
+
+        static void SearchProduct()
+        {
+            Console.WriteLine("\nПоиск товаров");
+            Console.WriteLine("Введите код, название или категорию (Напитки, Выпечка, Фастфуд, Хозтовары, Еда):");
+            string query = Console.ReadLine();
+            List<Product> results = new List<Product>();
+            if (int.TryParse(query, out int code))
+            {
+                Product p = FindByCode(code);
+                if (p != null) results.Add(p);
+            }
+            if (Enum.TryParse(query, true, out Category cat))
+            {
+                foreach (var p in products)
+                {
+                    if (p.category == cat) results.Add(p);
+                }
+            }
+            if (results.Count == 0)
+            {
+                foreach (var p in products)
+                {
+                    if (p.name.ToLower().Contains(query.ToLower()))
+                    {
+                        results.Add(p);
+                    }
+                }
+            }
+            Console.WriteLine($"\nНайдено товаров: {results.Count}");
+            foreach (var p in results)
+            {
+                p.PrintInfo();
+            }
+            if (results.Count == 0) Console.WriteLine("Ничего не найдено.");
+
+
+        }
+        static Product FindByCode(int code)
+        {
+            foreach (var p in products)
+            {
+                if (p.code == code) return p;
+            }
+            return null;
+        }
+
+        static string ReadString(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(input)) return input;
+                Console.WriteLine("Ошибка: Название не может быть пустым");
+            }
+        }
+
+        static double ReadDouble(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (double.TryParse(Console.ReadLine(), out double value) && value > 0) return value;
+                Console.WriteLine("Ошибка: Введите положительное число");
+            }
+        }
+
+        static int ReadInt(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out int value) && value > 0) return value;
+                Console.WriteLine("Ошибка: Введите целое число больше нуля");
+            }
+        }
+
+        static Category ReadCategory()
+        {
+            Console.WriteLine("Доступные категории: Напитки, Выпечка, Фастфуд, Хозтовары, Еда");
+            while (true)
+            {
+                Console.Write("Категория: ");
+                string input = Console.ReadLine();
+                if (Enum.TryParse(input, true, out Category category)) return category;
+                Console.WriteLine("Ошибка: Введите категорию из списка");
+            }
+        }
+    }
+}
