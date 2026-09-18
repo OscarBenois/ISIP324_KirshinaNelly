@@ -45,3 +45,17 @@ namespace ISIP324_KirshinaNelly
             products.Add(new Product("Бургер", 200, 0, Category.Фастфуд));
             products.Add(new Product("Мыло", 80, 10, Category.Хозтовары));
             products.Add(new Product("Яблоки 1kg", 30, 30, Category.Еда));
+
+            while (true)
+            {
+                Console.WriteLine("Учёт товаров в магазине");
+                Console.WriteLine("1. Добавить товар");
+                Console.WriteLine("2. Удалить товар");
+                Console.WriteLine("3. Заказать поставку");
+                Console.WriteLine("4. Продать товар");
+                Console.WriteLine("5. Поиск товаров");
+                Console.WriteLine("0. Выход");
+                Console.Write("Выберите пункт от 0 до 5:");
+
+                string choice = Console.ReadLine();
+                
