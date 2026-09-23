@@ -8,7 +8,7 @@ namespace ISIP324_KirshinaNelly
 {
     internal class Program
     {
-        public enum Category { Напитки, Выпечка, Фастфуд, Хозтовары, Еда }
+        public enum Category { Напитки, Выпечка, Фастфуд }
 
         public class Product
         {
@@ -43,8 +43,6 @@ namespace ISIP324_KirshinaNelly
             products.Add(new Product("Кокакола 0.5", 150, 20, Category.Напитки));
             products.Add(new Product("Багет", 50, 15, Category.Выпечка));
             products.Add(new Product("Бургер", 200, 0, Category.Фастфуд));
-            products.Add(new Product("Мыло", 80, 10, Category.Хозтовары));
-            products.Add(new Product("Яблоки 1kg", 30, 30, Category.Еда));
 
             while (true)
             {
@@ -159,40 +157,31 @@ namespace ISIP324_KirshinaNelly
 
         static void SearchProduct()
         {
-            Console.WriteLine("\nПоиск товаров");
-            Console.WriteLine("Введите код, название или категорию (Напитки, Выпечка, Фастфуд, Хозтовары, Еда):");
-            string query = Console.ReadLine();
-            List<Product> results = new List<Product>();
-            if (int.TryParse(query, out int code))
+            Console.WriteLine("\n--- Поиск товаров ---");
+            Console.WriteLine("Введите код, название или категорию (Напитки, Выпечка, Фастфуд):");
+            string query = Console.ReadLine().Trim().ToLower();
+
+            Console.WriteLine("\nРезультаты поиска:");
+            int foundCount = 0;
+
+            foreach (Product p in products)
             {
-                Product p = FindByCode(code);
-                if (p != null) results.Add(p);
-            }
-            if (Enum.TryParse(query, true, out Category cat))
-            {
-                foreach (var p in products)
+                bool matchCode = int.TryParse(query, out int code) && p.code == code;
+                bool matchName = p.name.ToLower().Contains(query);
+                bool matchCategory = p.category.ToString().ToLower() == query;
+
+                if (matchCode || matchName || matchCategory)
                 {
-                    if (p.category == cat) results.Add(p);
+                    p.PrintInfo();
+                    foundCount++;
                 }
             }
-            if (results.Count == 0)
-            {
-                foreach (var p in products)
-                {
-                    if (p.name.ToLower().Contains(query.ToLower()))
-                    {
-                        results.Add(p);
-                    }
-                }
-            }
-            Console.WriteLine($"\nНайдено товаров: {results.Count}");
-            foreach (var p in results)
-            {
-                p.PrintInfo();
-            }
-            if (results.Count == 0) Console.WriteLine("Ничего не найдено.");
 
-
+            if (foundCount == 0)
+            {
+                Console.WriteLine("Ничего не найдено.");
+            }
+            Console.WriteLine();
         }
         static Product FindByCode(int code)
         {
@@ -217,7 +206,7 @@ namespace ISIP324_KirshinaNelly
         static double ReadDouble(string prompt)
         {
             while (true)
-            {
+            {1
                 Console.Write(prompt);
                 if (double.TryParse(Console.ReadLine(), out double value) && value > 0) return value;
                 Console.WriteLine("Ошибка: Введите положительное число");
