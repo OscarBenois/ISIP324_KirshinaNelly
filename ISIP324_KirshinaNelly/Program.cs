@@ -206,7 +206,7 @@ namespace ISIP324_KirshinaNelly
         static double ReadDouble(string prompt)
         {
             while (true)
-            {1
+            {
                 Console.Write(prompt);
                 if (double.TryParse(Console.ReadLine(), out double value) && value > 0) return value;
                 Console.WriteLine("Ошибка: Введите положительное число");
