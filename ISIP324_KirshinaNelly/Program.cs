@@ -33,15 +33,15 @@ namespace ISIP324_KirshinaNelly
             }
             public void PrintInfo()
             {
-                Console.WriteLine($"[Код: {code}] {name} | Цена: {price} | Остаток: {quantity} | Категория: {category} | В наличии: {(isThere ? "Да" : "Нет")}");
+                Console.WriteLine($"[Код: {code}] {name} / Цена: {price} / Остаток: {quantity} / Категория: {category} / В наличии: {(isThere ? "Да" : "Нет")}");
             }
         }
         static List<Product> products = new List<Product>();
 
         static void Main(string[] args)
         {
-            products.Add(new Product("Кокакола 0.5", 150, 20, Category.Напитки));
-            products.Add(new Product("Багет", 50, 15, Category.Выпечка));
+            products.Add(new Product("Кокакола", 150, 20, Category.Напитки));
+            products.Add(new Product("Хлеб", 50, 15, Category.Выпечка));
             products.Add(new Product("Бургер", 200, 0, Category.Фастфуд));
 
             while (true)
@@ -76,33 +76,33 @@ namespace ISIP324_KirshinaNelly
                     case "0":
                         return;
                     default:
-                        Console.WriteLine("Неверный ввод. Попробуйте снова");
+                        Console.WriteLine("Неверный ввод.");
                         break;
                 }
             }
         }
         static void AddProduct()
         {
-            Console.WriteLine("\nДобавление товара");
+            Console.WriteLine("Добавление товара");
             string name = ReadString("Название: ");
             double price = ReadDouble("Цена: ");
             int quantity = ReadInt("Количество: ");
             Category category = ReadCategory();
 
             products.Add(new Product(name, price, quantity, category));
-            Console.WriteLine("Товар успешно добавлен.");
+            Console.WriteLine("Товар добавлен.");
         }
 
         static void RemoveProduct()
         {
-            Console.WriteLine("\nУдаление товара");
+            Console.WriteLine("Удаление товара");
             int code = ReadInt("Введите код товара для удаления: ");
             Product found = FindByCode(code);
 
             if (found != null)
             {
                 products.Remove(found);
-                Console.WriteLine("Товар успешно удален");
+                Console.WriteLine("Товар удален");
             }
             else
             {
@@ -112,7 +112,7 @@ namespace ISIP324_KirshinaNelly
 
         static void SupplyProduct()
         {
-            Console.WriteLine("\nЗаказ поставки");
+            Console.WriteLine("Заказ поставки");
             int code = ReadInt("Введите код товара: ");
             int amount = ReadInt("Сколько единиц поставить: ");
             Product found = FindByCode(code);
@@ -131,7 +131,7 @@ namespace ISIP324_KirshinaNelly
 
         static void SellProduct()
         {
-            Console.WriteLine("\nПродажа товара");
+            Console.WriteLine("Продажа товара");
             int code = ReadInt("Введите код товара: ");
             int amount = ReadInt("Сколько единиц продать: ");
             Product found = FindByCode(code);
@@ -141,7 +141,7 @@ namespace ISIP324_KirshinaNelly
                 if (found.quantity >= amount)
                 {
                     found.quantity -= amount;
-                    Console.WriteLine("Продажа успешна");
+                    Console.WriteLine("Продано");
                 }
                 else
                 {
@@ -157,11 +157,11 @@ namespace ISIP324_KirshinaNelly
 
         static void SearchProduct()
         {
-            Console.WriteLine("\n--- Поиск товаров ---");
+            Console.WriteLine("Поиск товаров");
             Console.WriteLine("Введите код, название или категорию (Напитки, Выпечка, Фастфуд):");
             string query = Console.ReadLine().Trim().ToLower();
 
-            Console.WriteLine("\nРезультаты поиска:");
+            Console.WriteLine("Результаты поиска:");
             int foundCount = 0;
 
             foreach (Product p in products)
@@ -225,7 +225,7 @@ namespace ISIP324_KirshinaNelly
 
         static Category ReadCategory()
         {
-            Console.WriteLine("Доступные категории: Напитки, Выпечка, Фастфуд, Хозтовары, Еда");
+            Console.WriteLine("Доступные категории: Напитки, Выпечка, Фастфуд");
             while (true)
             {
                 Console.Write("Категория: ");
