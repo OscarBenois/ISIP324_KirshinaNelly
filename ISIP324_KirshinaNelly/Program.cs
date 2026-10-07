@@ -136,7 +136,7 @@ namespace ISIP324_KirshinaNelly
             };
 
             allStatistics.Add(currentStats);
-            Console.WriteLine("Статистика сохранена.\n");
+            Console.WriteLine("Статистика сохранена.");
 
             Console.WriteLine("Статистика текущего текста:");
             Console.WriteLine($"Слов: {currentStats.WordCount}");
@@ -147,15 +147,14 @@ namespace ISIP324_KirshinaNelly
             Console.WriteLine("Частота букв:");
             foreach (var pair in currentStats.LetterFrequency)
             {
-                Console.Write($"{pair.Key}({pair.Value}) ");
+                Console.WriteLine($"{pair.Key}({pair.Value}) ");
             }
-            Console.WriteLine(new string('-', 40));
         }
         static void ShowPastStats(List<TextStatistics> allStatistics)
         {
             if (allStatistics.Count == 0)
             {
-                Console.WriteLine("\nИстория анализов пуста. Сначала введите текст (пункт 1).");
+                Console.WriteLine("История анализов пуста. Сначала введите текст (пункт 1).");
                 return;
             }
 
@@ -172,9 +171,8 @@ namespace ISIP324_KirshinaNelly
 
                 foreach (var pair in allStatistics[i].LetterFrequency)
                 {
-                    Console.Write($"{pair.Key}({pair.Value}) ");
+                    Console.WriteLine($"{pair.Key}({pair.Value}) ");
                 }
-                Console.WriteLine(" " new string('-', 20));
             }
         }
     }
