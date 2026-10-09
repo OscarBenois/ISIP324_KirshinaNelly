@@ -28,7 +28,8 @@ namespace ISIP324_KirshinaNelly
                 Year = year;
                 Price = price;
 
-                public void PrintInfo()
+            }
+            public void PrintInfo()
             {
                 Console.WriteLine($"[Код: {id}] {name} / Цена: {price} / Автор: {author} / Жанр: {genre} / Год: {year}");
             }
@@ -69,13 +70,13 @@ namespace ISIP324_KirshinaNelly
                         SearchBook();
                         break;
                     case "4":
-                        SortProduct();
+                        SortBook();
                         break;
                     case "5":
                         MinMaxPriceBook();
                         break;
                     case "6":
-                        AuthorsBooks();
+                        AuthorsBook();
                         break;
                     case "0":
                         return;
@@ -84,5 +85,31 @@ namespace ISIP324_KirshinaNelly
                         break;
                 }
             }
+
+        }
+        static void AddBook()
+        {
+
+        }
+        static void RemoveBook()
+        {
+
+        }
+        static void SearchBook()
+        {
+
+        }
+        static void SortBook()
+        {
+
+        }
+        static void MinMaxPriceBook()
+        {
+
+        }
+        static void AuthorsBook()
+        {
+
+        }
     }
 }
