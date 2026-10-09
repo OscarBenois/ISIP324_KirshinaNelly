@@ -8,8 +8,10 @@ namespace ISIP324_KirshinaNelly
 {
     internal class Program
     {
+        public class 
         static void Main(string[] args)
         {
+
         }
     }
 }
