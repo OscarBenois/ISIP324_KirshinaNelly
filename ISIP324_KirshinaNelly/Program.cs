@@ -19,19 +19,19 @@ namespace ISIP324_KirshinaNelly
             public uint Year;
             public uint Price;
 
-        }
-        public Book(int id, string name, string author, Genre genre, int year, decimal price)
-        {
-            Id = id;
-            Name = name;
-            Author = author;
-            Genre = genre;
-            Year = year;
-            Price = price;
-        }
-        public void PrintInfo()
-        {
-            Console.WriteLine($"[Код: {id}] {name} / Цена: {price} / Автор: {author} / Жанр: {genre} / Год: {year}");
+            public Book(int id, string name, string author, Genre genre, int year, decimal price)
+            {
+                Id = id;
+                Name = name;
+                Author = author;
+                Genre = genre;
+                Year = year;
+                Price = price;
+
+                public void PrintInfo()
+            {
+                Console.WriteLine($"[Код: {id}] {name} / Цена: {price} / Автор: {author} / Жанр: {genre} / Год: {year}");
+            }
         }
         static void Main(string[] args)
         {
