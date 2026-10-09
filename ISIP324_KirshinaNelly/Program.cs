@@ -29,7 +29,10 @@ namespace ISIP324_KirshinaNelly
             Year = year;
             Price = price;
         }
-
+        public void PrintInfo()
+        {
+            Console.WriteLine($"[Код: {id}] {name} / Цена: {price} / Автор: {author} / Жанр: {genre} / Год: {year}");
+        }
         static void Main(string[] args)
         {
         }
