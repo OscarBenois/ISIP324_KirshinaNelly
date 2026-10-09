@@ -9,7 +9,7 @@ namespace ISIP324_KirshinaNelly
     internal class Program
     {
         public enum Genre
-        { Фантастика, Ужасы, Роман, Детектив, Фэнтези }
+        { Драма, Ужасы, Роман, Детектив, Фэнтези }
         public class Book
         {
             public int Id;
@@ -33,8 +33,17 @@ namespace ISIP324_KirshinaNelly
                 Console.WriteLine($"[Код: {id}] {name} / Цена: {price} / Автор: {author} / Жанр: {genre} / Год: {year}");
             }
         }
+        static List<Book> books = new List<Book>();
+        static int nextId = 1;
+
         static void Main(string[] args)
         {
+            books.Add(new Book(nextId++, "Отверженные", "Виктор Гюго", Genre.Драма, 1967, 550.50m));
+            books.Add(new Book(nextId++, "Преступление и наказание", "Ф. Достоевский", Genre.Роман, 1866, 450.00m));
+            books.Add(new Book(nextId++, "Кладбище домашних животных", "Стивен Кинг", Genre.Ужасы, 1986, 700.00m));
+            books.Add(new Book(nextId++, "Шерлок Холмс", "А. Конан Дойл", Genre.Детектив, 1887, 350.00m));
+            books.Add(new Book(nextId++, "Властелин колец", "Дж. Р. Р. Толкин", Genre.Фэнтези, 1954, 800.00m));
         }
+    }
     }
 }
