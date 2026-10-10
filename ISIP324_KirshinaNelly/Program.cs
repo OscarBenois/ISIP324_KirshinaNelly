@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISIP324_KirshinaNelly
 {
@@ -24,17 +21,18 @@ namespace ISIP324_KirshinaNelly
 
             while (true)
             {
-                Console.WriteLine("1. Анализ текста.");
-                Console.WriteLine("2. Просмотр статистики по прошлым текстам");
-                Console.WriteLine("0. Выход");
-                Console.WriteLine("Выберите пункт меню: ");
+                Console.WriteLine("Анализ текста");
+                Console.WriteLine("1. Ввести текст и проанализировать.");
+                Console.WriteLine("2. Вывести статистику по прошлым текстам.");
+                Console.WriteLine("0. Выход.");
+                Console.Write("Выберите пункт меню: ");
 
                 string choice = Console.ReadLine();
 
                 switch (choice)
                 {
                     case "1":
-                        NewText(allStatistics);
+                        AnalyzeText(allStatistics);
                         break;
 
                     case "2":
@@ -52,7 +50,7 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
-        static void NewText(List<TextStatistics> allStatistics)
+        static void AnalyzeText(List<TextStatistics> allStatistics)
         {
             string input = "";
             while (true)
@@ -62,12 +60,12 @@ namespace ISIP324_KirshinaNelly
 
                 if (input.Length >= 100)
                 {
-                    Console.WriteLine("Верный ввод.");
+                    Console.WriteLine("Условие ввода выполнено.");
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("Невереный ввод. Попробуйте снова.");
+                    Console.WriteLine("Условие ввода выполнено неверно. Попробуйте снова.");
                 }
             }
 
@@ -75,90 +73,94 @@ namespace ISIP324_KirshinaNelly
             string[] words = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
             int wordCount = words.Length;
-            string shortestWord = words[0];
-            string longestWord = words[0];
+            Console.WriteLine($"Слов в тексте: {wordCount}");
+
+            int sentenceCount = input.Split(new char[] { '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries).Length;
+            Console.WriteLine($"Предложений в тексте: {sentenceCount}");
+
+            string minWord = words[0];
+            string maxWord = words[0];
 
             for (int i = 1; i < words.Length; i++)
             {
-                if (words[i].Length < shortestWord.Length)
-                    shortestWord = words[i];
+                string cleanWord = words[i].Trim('.', ',', '!', '?', ':', ';', '-', '(', ')');
 
-                if (words[i].Length > longestWord.Length)
-                    longestWord = words[i];
+                if (cleanWord.Length < minWord.Length)
+                {
+                    minWord = cleanWord;
+                }
+
+                if (cleanWord.Length > maxWord.Length)
+                {
+                    maxWord = cleanWord;
+                }
             }
 
-            int sentenceCount = input.Split(new char[] { '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries).Length;
-
+            Console.WriteLine($"Самое короткое слово: {minWord}");
+            Console.WriteLine($"Самое длинное слово: {maxWord}");
             string vowels = "аеёиоуыэюя";
             string consonants = "бвгджзклмнпрстфхцчшщй";
             int vowelCount = 0;
             int consonantCount = 0;
 
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (vowels.Contains(char.ToLower(input[i])))
-                {
-                    vowelCount++;
-                }
-                else if (consonants.Contains(char.ToLower(input[i])))
-                {
-                    consonantCount++;
-                }
-            }
+            Dictionary<char, int> letterFrequency = new Dictionary<char, int>();
 
-            Dictionary<char, int> letterFreq = new Dictionary<char, int>();
             for (int i = 0; i < input.Length; i++)
             {
                 char c = input[i];
+                char lowerC = char.ToLower(c); 
+
+                if (vowels.Contains(lowerC))
+                {
+                    vowelCount++;
+                }
+                else if (consonants.Contains(lowerC))
+                {
+                    consonantCount++;
+                }
+
                 if (char.IsLetter(c))
                 {
-                    c = char.ToLower(c);
-                    if (letterFreq.ContainsKey(c))
+                    if (letterFrequency.ContainsKey(lowerC))
                     {
-                        letterFreq[c]++;
+                        letterFrequency[lowerC]++;
                     }
                     else
                     {
-                        letterFreq[c] = 1;
+                        letterFrequency[lowerC] = 1;
                     }
                 }
             }
+
+            Console.WriteLine($"Гласных букв: {vowelCount}");
+            Console.WriteLine($"Согласных букв: {consonantCount}");
 
             TextStatistics currentStats = new TextStatistics
             {
                 WordCount = wordCount,
-                MinWord = shortestWord,
+                MinWord = minWord,
                 SentenceCount = sentenceCount,
                 VowelCount = vowelCount,
                 ConsonantCount = consonantCount,
-                MaxWord = longestWord,
-                LetterFrequency = letterFreq
+                MaxWord = maxWord,
+                LetterFrequency = letterFrequency
             };
 
             allStatistics.Add(currentStats);
-            Console.WriteLine("Статистика сохранена.");
-
-            Console.WriteLine("Статистика текущего текста:");
-            Console.WriteLine($"Слов: {currentStats.WordCount}");
-            Console.WriteLine($"Предложений: {currentStats.SentenceCount}");
-            Console.WriteLine($"Короткое слово: {currentStats.MinWord}");
-            Console.WriteLine($"Длинное слово: {currentStats.MaxWord}");
-            Console.WriteLine($"Гласных: {currentStats.VowelCount}, Согласных: {currentStats.ConsonantCount}");
-            Console.WriteLine("Частота букв:");
-            foreach (var pair in currentStats.LetterFrequency)
-            {
-                Console.WriteLine($"{pair.Key}({pair.Value}) ");
-            }
+            Console.WriteLine("Статистика текущего текста сохранена в историю.");
         }
+
+
         static void ShowPastStats(List<TextStatistics> allStatistics)
         {
+            Console.WriteLine("Статистика по прошлым текстам");
+
             if (allStatistics.Count == 0)
             {
-                Console.WriteLine("История анализов пуста. Сначала введите текст (пункт 1).");
+                Console.WriteLine("История пуста. Сначала введите текст (пункт 1).");
                 return;
             }
 
-            Console.WriteLine("История анализов текста.");
             for (int i = 0; i < allStatistics.Count; i++)
             {
                 Console.WriteLine($"Текст №{i + 1}");
@@ -167,12 +169,14 @@ namespace ISIP324_KirshinaNelly
                 Console.WriteLine($"Короткое слово: {allStatistics[i].MinWord}");
                 Console.WriteLine($"Длинное слово: {allStatistics[i].MaxWord}");
                 Console.WriteLine($"Гласных: {allStatistics[i].VowelCount}, Согласных: {allStatistics[i].ConsonantCount}");
+
                 Console.WriteLine("Частота букв:");
 
-                foreach (var pair in allStatistics[i].LetterFrequency)
+                foreach (KeyValuePair<char, int> pair in allStatistics[i].LetterFrequency)
                 {
-                    Console.WriteLine($"{pair.Key}({pair.Value}) ");
+                    Console.Write($"{pair.Key}({pair.Value}) ");
                 }
+                Console.WriteLine();
             }
         }
     }
