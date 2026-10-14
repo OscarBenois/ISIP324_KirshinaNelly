@@ -19,9 +19,9 @@ namespace ISIP324_KirshinaNelly
             public string Author;
             public Genre Genre;
             public int Year;
-            public double Price;
+            public decimal Price;
 
-            public Book(string name, string author, Genre genre, int year, double price)
+            public Book(string name, string author, Genre genre, int year, decimal price)
             {
                 this.Id = nextId++;
                 this.Name = name;
@@ -96,7 +96,7 @@ namespace ISIP324_KirshinaNelly
             string author = ReadString("Автор: ");
             Genre genre = ReadGenre();
             int year = ReadInt("Год издания: ");
-            double price = ReadDouble("Цена: ");
+            decimal price = ReadDecimal("Цена: ");
 
             books.Add(new Book(name, author, genre, year, price));
             Console.WriteLine("Книга добавлена.");
@@ -225,12 +225,12 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
-        static double ReadDouble(string prompt)
+        static decimal ReadDecimal(string prompt)
         {
             while (true)
             {
                 Console.Write(prompt);
-                if (double.TryParse(Console.ReadLine(), out double value) && value > 0) return value;
+                if (decimal.TryParse(Console.ReadLine(), out decimal value) && value > 0) return value;
                 Console.WriteLine("Ошибка: Введите положительное число.");
             }
         }
