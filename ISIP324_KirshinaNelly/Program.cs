@@ -107,34 +107,38 @@ namespace ISIP324_KirshinaNelly
 
             for (int i = 0; i < input.Length; i++)
             {
-                char c = input[i];
-                char lowerC = char.ToLower(c); 
+                char lower = char.ToLower(input[i]);
 
-                if (vowels.Contains(lowerC))
+                if (vowels.Contains(lower.ToString()))
                 {
                     vowelCount++;
                 }
-                else if (consonants.Contains(lowerC))
+                else if (consonants.Contains(lower.ToString()))
                 {
                     consonantCount++;
                 }
 
-                if (char.IsLetter(c))
+                if (char.IsLetter(input[i]))
                 {
-                    if (letterFrequency.ContainsKey(lowerC))
+                    if (letterFrequency.ContainsKey(lower))
                     {
-                        letterFrequency[lowerC]++;
+                        letterFrequency[lower]++;
                     }
                     else
                     {
-                        letterFrequency[lowerC] = 1;
+                        letterFrequency[lower] = 1;
                     }
                 }
             }
 
             Console.WriteLine($"Гласных букв: {vowelCount}");
             Console.WriteLine($"Согласных букв: {consonantCount}");
-
+            Console.WriteLine("Частота букв:");
+            foreach (KeyValuePair<char, int> pair in letterFrequency)
+            {
+                Console.Write($"{pair.Key}({pair.Value}) ");
+            }
+            Console.WriteLine();
             TextStatistics currentStats = new TextStatistics
             {
                 WordCount = wordCount,
