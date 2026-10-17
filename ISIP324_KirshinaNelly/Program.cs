@@ -167,7 +167,7 @@ namespace ISIP324_KirshinaNelly
 
             for (int i = 0; i < allStatistics.Count; i++)
             {
-                Console.WriteLine($"Текст №{i + 1}");
+                Console.WriteLine($"Текст {i + 1}");
                 Console.WriteLine($"Слов: {allStatistics[i].WordCount}");
                 Console.WriteLine($"Предложений: {allStatistics[i].SentenceCount}");
                 Console.WriteLine($"Короткое слово: {allStatistics[i].MinWord}");
