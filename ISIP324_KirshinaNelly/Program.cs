@@ -10,6 +10,7 @@ namespace ISIP324_KirshinaNelly
     {
         static void Main(string[] args)
         {
+
         }
     }
 }
