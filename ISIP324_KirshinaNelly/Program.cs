@@ -108,4 +108,36 @@ namespace ISIP324_KirshinaNelly
                     Console.WriteLine($"    - {c.Name}");
             }
         }
+        public class Student : Person
+        {
+            private static int nextStudentID = 1;
+            private int studentID;
+            private List<Course> courses = new List<Course>();
+
+            public Student(string fio, int age, string email, string phone)
+                : base(fio, age, email, phone)
+            {
+                studentID = nextStudentID++;
+            }
+
+            public int StudentID => studentID;
+            public List<Course> Courses => courses;
+
+            public void EnrollInCourses(Course course)
+            {
+                if (course == null)
+                    throw new Exception("Курс не может быть пустым.");
+                course.AddStudent(this);
+            }
+
+            internal void AddCourse(Course c) { if (!courses.Contains(c)) courses.Add(c); }
+
+            public override void PrintInfo()
+            {
+                base.PrintInfo();
+                Console.WriteLine($"  ID студента: {studentID}. Записан на курсов: {courses.Count}");
+                foreach (var c in courses)
+                    Console.WriteLine($"    - {c.Name}");
+            }
+        }
         
