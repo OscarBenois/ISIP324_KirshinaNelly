@@ -140,4 +140,68 @@ namespace ISIP324_KirshinaNelly
                     Console.WriteLine($"    - {c.Name}");
             }
         }
+        public class Course
+        {
+            private static int nextCourseID = 1;
+            private int courseID;
+            private string name;
+            private string description;
+            private Teacher teacher;
+            private List<Student> students = new List<Student>();
+
+            public Course(string name, string description)
+            {
+                courseID = nextCourseID++;
+                Name = name;
+                Description = description;
+            }
+
+            public int CourseID => courseID;
+
+            public string Name
+            {
+                get => name;
+                set
+                {
+                    if (string.IsNullOrWhiteSpace(value))
+                        throw new Exception("Название курса не может быть пустым.");
+                    name = value.Trim();
+                }
+            }
+
+            public string Description
+            {
+                get => description;
+                set
+                {
+                    if (string.IsNullOrWhiteSpace(value))
+                        throw new Exception("Описание курса не может быть пустым.");
+                    description = value.Trim();
+                }
+            }
+
+            public Teacher Teacher => teacher;
+            public List<Student> Students => students;
+
+            internal void SetTeacher(Teacher t)
+            {
+                if (teacher == t) return;
+                if (teacher != null) teacher.RemoveCourse(this);
+                teacher = t;
+                if (t != null) t.AddCourse(this);
+            }
+
+            internal void AddStudent(Student s)
+            {
+                if (students.Contains(s))
+                    throw new Exception("Студент уже записан на этот курс.");
+                students.Add(s);
+                s.AddCourse(this);
+            }
+
+            public void PrintInfo()
+            {
+                Console.WriteLine($"  ID курса: {courseID} / Название: {Name} / Описание: {Description} / Преподаватель: {(teacher != null ? teacher.Fio : "не назначен")} / Студентов записано: {students.Count}");
+            }
+        }
         
