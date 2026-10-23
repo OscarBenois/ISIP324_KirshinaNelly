@@ -204,4 +204,8 @@ namespace ISIP324_KirshinaNelly
                 Console.WriteLine($"  ID курса: {courseID} / Название: {Name} / Описание: {Description} / Преподаватель: {(teacher != null ? teacher.Fio : "не назначен")} / Студентов записано: {students.Count}");
             }
         }
+        static List<Student> students = new List<Student>();
+        static List<Teacher> teachers = new List<Teacher>();
+        static List<Course> courses = new List<Course>();
+
         
