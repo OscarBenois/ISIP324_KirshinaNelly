@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISIP324_KirshinaNelly
 {
@@ -30,7 +28,7 @@ namespace ISIP324_KirshinaNelly
                 {
                     if (string.IsNullOrWhiteSpace(value))
                         throw new Exception("ФИО не может быть пустым.");
-                    if (value.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length < 3)
+                    if (value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length < 3)
                         throw new Exception("ФИО должно содержать фамилию, имя и отчество.");
                     fio = value.Trim();
                 }
@@ -41,7 +39,7 @@ namespace ISIP324_KirshinaNelly
                 get => age;
                 set
                 {
-                    if (value < 14 || value > 100)
+                    if (value < 16 || value > 100)
                         throw new Exception("Возраст должен быть от 16 до 100 лет.");
                     age = value;
                 }
@@ -88,7 +86,7 @@ namespace ISIP324_KirshinaNelly
             }
 
             public int TeacherID => teacherID;
-            public List<Course> Courses => courses;
+            public IReadOnlyList<Course> Courses => courses;
 
             public void AssignToCourse(Course course)
             {
@@ -121,7 +119,7 @@ namespace ISIP324_KirshinaNelly
             }
 
             public int StudentID => studentID;
-            public List<Course> Courses => courses;
+            public IReadOnlyList<Course> Courses => courses;
 
             public void EnrollInCourses(Course course)
             {
@@ -181,7 +179,7 @@ namespace ISIP324_KirshinaNelly
             }
 
             public Teacher Teacher => teacher;
-            public List<Student> Students => students;
+            public IReadOnlyList<Student> Students => students;
 
             internal void SetTeacher(Teacher t)
             {
@@ -201,11 +199,368 @@ namespace ISIP324_KirshinaNelly
 
             public void PrintInfo()
             {
-                Console.WriteLine($"  ID курса: {courseID} / Название: {Name} / Описание: {Description} / Преподаватель: {(teacher != null ? teacher.Fio : "не назначен")} / Студентов записано: {students.Count}");
+                Console.WriteLine($"  ID курса: {courseID} / Название: {Name}");
+                Console.WriteLine($"  Описание: {Description}");
+                Console.WriteLine($"  Преподаватель: {(teacher != null ? teacher.Fio : "не назначен")}");
+                Console.WriteLine($"  Студентов записано: {students.Count}");
             }
         }
-        static List<Student> students = new List<Student>();
-        static List<Teacher> teachers = new List<Teacher>();
-        static List<Course> courses = new List<Course>();
+        static void Main(string[] args)
+        {
+            List<Student> students = new List<Student>();
+            List<Teacher> teachers = new List<Teacher>();
+            List<Course> courses = new List<Course>();
 
-        
+            ShowMenu();
+            void ShowMenu()
+            {
+                while (true)
+                {
+                    Console.WriteLine("Система управления институтом: ");
+                    Console.WriteLine("1. Управление студентами");
+                    Console.WriteLine("2. Управление преподавателями");
+                    Console.WriteLine("3. Управление курсами");
+                    Console.WriteLine("4. Показать все списки");
+                    Console.WriteLine("0. Выход");
+                    Console.Write("Выберите пункт: ");
+
+                    try
+                    {
+                        switch (Console.ReadLine())
+                        {
+                            case "1": StudentMenu(); break;
+                            case "2": TeacherMenu(); break;
+                            case "3": CourseMenu(); break;
+                            case "4": ShowAllLists(); break;
+                            case "0": return;
+                            default: Console.WriteLine("Неверный ввод."); break;
+                        }
+                    }
+                    catch (Exception ex) { Console.WriteLine($"Ошибка: {ex.Message}"); }
+                }
+            }
+            void StudentMenu()
+            {
+                while (true)
+                {
+                    Console.WriteLine("Студенты: ");
+                    Console.WriteLine("1. Добавить студента");
+                    Console.WriteLine("2. Показать всех студентов");
+                    Console.WriteLine("3. Записать студента на курс");
+                    Console.WriteLine("4. Показать курсы студента");
+                    Console.WriteLine("0. Назад");
+                    Console.Write("Выберите пункт: ");
+
+                    try
+                    {
+                        switch (Console.ReadLine())
+                        {
+                            case "1": AddStudent(); break;
+                            case "2": ShowStudents(); break;
+                            case "3": EnrollStudent(); break;
+                            case "4": ShowStudentCourses(); break;
+                            case "0": return;
+                            default: Console.WriteLine("Неверный ввод."); break;
+                        }
+                    }
+                    catch (Exception ex) { Console.WriteLine($"Ошибка: {ex.Message}"); }
+                }
+            }
+
+            void AddStudent()
+            {
+                Console.WriteLine("Добавление студента");
+                Console.WriteLine("Формат ввода: ФИО; возраст; email; телефон");
+                Console.Write("Ваш ввод: ");
+                string[] parts = (Console.ReadLine() ?? "").Split(';');
+
+                if (parts.Length != 4)
+                {
+                    Console.WriteLine("Неверный формат. Нужно 4 поля через ';'");
+                    return;
+                }
+
+                if (!int.TryParse(parts[1].Trim(), out int age))
+                {
+                    Console.WriteLine("Ошибка: возраст должен быть числом.");
+                    return;
+                }
+
+                Student s = new Student(parts[0].Trim(), age, parts[2].Trim(), parts[3].Trim());
+                students.Add(s);
+                Console.WriteLine($"Студент добавлен. ID: {s.StudentID}");
+            }
+
+            void ShowStudents()
+            {
+                if (students.Count == 0) { Console.WriteLine("Студентов нет."); return; }
+                Console.WriteLine("Все студенты:");
+                foreach (var s in students.OrderBy(x => x.Fio))
+                {
+                    Console.WriteLine("Студент: ");
+                    s.PrintInfo();
+                }
+            }
+
+            void EnrollStudent()
+            {
+                if (students.Count == 0) { Console.WriteLine("Список студентов пуст."); return; }
+                if (courses.Count == 0) { Console.WriteLine("Список курсов пуст."); return; }
+
+                Console.WriteLine("Выберите студента:");
+                for (int i = 0; i < students.Count; i++)
+                    Console.WriteLine($"{i + 1}. {students[i].Fio}");
+                int si = ReadInt("Номер: ", 1, students.Count) - 1;
+
+                Console.WriteLine("Выберите курс:");
+                for (int i = 0; i < courses.Count; i++)
+                    Console.WriteLine($"{i + 1}. {courses[i].Name}");
+                int ci = ReadInt("Номер: ", 1, courses.Count) - 1;
+
+                students[si].EnrollInCourses(courses[ci]);
+                Console.WriteLine($"Студент '{students[si].Fio}' записан на курс '{courses[ci].Name}'.");
+            }
+
+            void ShowStudentCourses()
+            {
+                if (students.Count == 0) { Console.WriteLine("Список студентов пуст."); return; }
+
+                Console.WriteLine("Выберите студента:");
+                for (int i = 0; i < students.Count; i++)
+                    Console.WriteLine($"{i + 1}. {students[i].Fio}");
+                int si = ReadInt("Номер: ", 1, students.Count) - 1;
+
+                var s = students[si];
+                Console.WriteLine($"Курсы студента '{s.Fio}':");
+                if (s.Courses.Count == 0) { Console.WriteLine("  Курсов нет."); return; }
+                foreach (var c in s.Courses.OrderBy(x => x.Name))
+                    Console.WriteLine($"  - [{c.CourseID}] {c.Name}");
+            }
+            void TeacherMenu()
+            {
+                while (true)
+                {
+                    Console.WriteLine("Преподователи: ");
+                    Console.WriteLine("1. Добавить преподавателя");
+                    Console.WriteLine("2. Показать всех преподавателей");
+                    Console.WriteLine("3. Назначить преподавателя на курс");
+                    Console.WriteLine("0. Назад");
+                    Console.Write("Выберите пункт: ");
+
+                    try
+                    {
+                        switch (Console.ReadLine())
+                        {
+                            case "1": AddTeacher(); break;
+                            case "2": ShowTeachers(); break;
+                            case "3": AssignTeacher(); break;
+                            case "0": return;
+                            default: Console.WriteLine("Неверный ввод."); break;
+                        }
+                    }
+                    catch (Exception ex) { Console.WriteLine($"Ошибка: {ex.Message}"); }
+                }
+            }
+
+            void AddTeacher()
+            {
+                Console.WriteLine("Добавление преподавателя");
+                Console.WriteLine("Формат ввода: ФИО; возраст; email; телефон");
+                Console.Write("Ваш ввод: ");
+                string[] parts = (Console.ReadLine() ?? "").Split(';');
+
+                if (parts.Length != 4)
+                {
+                    Console.WriteLine("Неверный формат. Нужно 4 поля через ';'");
+                    return;
+                }
+
+                if (!int.TryParse(parts[1].Trim(), out int age))
+                {
+                    Console.WriteLine("Ошибка: возраст должен быть числом.");
+                    return;
+                }
+
+                if (age < 21)
+                {
+                    Console.WriteLine("Ошибка: преподаватель должен быть не младше 21 года.");
+                    return;
+                }
+
+                Teacher t = new Teacher(parts[0].Trim(), age, parts[2].Trim(), parts[3].Trim());
+                teachers.Add(t);
+                Console.WriteLine($"Преподаватель добавлен. ID: {t.TeacherID}");
+            }
+
+            void ShowTeachers()
+            {
+                if (teachers.Count == 0) { Console.WriteLine("Преподавателей нет."); return; }
+                Console.WriteLine("Все преподаватели:");
+                foreach (var t in teachers.OrderBy(x => x.Fio))
+                {
+                    Console.WriteLine("Преподаватель: ");
+                    t.PrintInfo();
+                }
+            }
+
+            void AssignTeacher()
+            {
+                if (teachers.Count == 0) { Console.WriteLine("Список преподавателей пуст."); return; }
+                if (courses.Count == 0) { Console.WriteLine("Список курсов пуст."); return; }
+
+                Console.WriteLine("Выберите преподавателя:");
+                for (int i = 0; i < teachers.Count; i++)
+                    Console.WriteLine($"{i + 1}. {teachers[i].Fio}");
+                int ti = ReadInt("Номер: ", 1, teachers.Count) - 1;
+
+                Console.WriteLine("Выберите курс:");
+                for (int i = 0; i < courses.Count; i++)
+                {
+                    string current = courses[i].Teacher != null ? courses[i].Teacher.Fio : "не назначен";
+                    Console.WriteLine($"{i + 1}. {courses[i].Name} (текущий преподаватель: {current})");
+                }
+                int ci = ReadInt("Номер: ", 1, courses.Count) - 1;
+
+                teachers[ti].AssignToCourse(courses[ci]);
+                Console.WriteLine($"Преподаватель '{teachers[ti].Fio}' назначен на курс '{courses[ci].Name}'.");
+            }
+            void CourseMenu()
+            {
+                while (true)
+                {
+                    Console.WriteLine("Курсы: ");
+                    Console.WriteLine("1. Добавить курс");
+                    Console.WriteLine("2. Показать все курсы");
+                    Console.WriteLine("3. Показать детали курса");
+                    Console.WriteLine("4. Вывести студентов курса");
+                    Console.WriteLine("0. Назад");
+                    Console.Write("Выберите пункт: ");
+
+                    try
+                    {
+                        switch (Console.ReadLine())
+                        {
+                            case "1": AddCourse(); break;
+                            case "2": ShowCourses(); break;
+                            case "3": ShowCourseDetails(); break;
+                            case "4": ShowCourseStudents(); break;
+                            case "0": return;
+                            default: Console.WriteLine("Неверный ввод."); break;
+                        }
+                    }
+                    catch (Exception ex) { Console.WriteLine($"Ошибка: {ex.Message}"); }
+                }
+            }
+
+            void AddCourse()
+            {
+                Console.WriteLine("Добавление курса");
+                Console.WriteLine("Формат ввода: название; описание");
+                Console.Write("Ваш ввод: ");
+                string[] parts = (Console.ReadLine() ?? "").Split(';');
+
+                if (parts.Length != 2)
+                {
+                    Console.WriteLine("Неверный формат. Нужно 2 поля через ';'");
+                    return;
+                }
+
+                var c = new Course(parts[0].Trim(), parts[1].Trim());
+                courses.Add(c);
+
+                if (teachers.Count > 0)
+                {
+                    Console.Write("Назначить преподавателя сразу? (1 - да, 0 - нет): ");
+                    if (Console.ReadLine() == "1")
+                    {
+                        Console.WriteLine("Выберите преподавателя:");
+                        for (int i = 0; i < teachers.Count; i++)
+                            Console.WriteLine($"{i + 1}. {teachers[i].Fio}");
+                        int ti = ReadInt("Номер: ", 1, teachers.Count) - 1;
+                        teachers[ti].AssignToCourse(c);
+                    }
+                }
+
+                Console.WriteLine($"Курс создан. ID: {c.CourseID}");
+            }
+
+            void ShowCourses()
+            {
+                if (courses.Count == 0) { Console.WriteLine("Курсов нет."); return; }
+                Console.WriteLine("Все курсы:");
+                foreach (var c in courses.OrderBy(x => x.Name))
+                {
+                    Console.WriteLine("Курс");
+                    c.PrintInfo();
+                }
+            }
+
+            void ShowCourseDetails()
+            {
+                if (courses.Count == 0) { Console.WriteLine("Курсов нет."); return; }
+
+                Console.WriteLine("Выберите курс:");
+                for (int i = 0; i < courses.Count; i++)
+                    Console.WriteLine($"{i + 1}. {courses[i].Name}");
+                int ci = ReadInt("Номер: ", 1, courses.Count) - 1;
+
+                Console.WriteLine();
+                courses[ci].PrintInfo();
+            }
+
+            void ShowCourseStudents()
+            {
+                if (courses.Count == 0) { Console.WriteLine("Курсов нет."); return; }
+
+                Console.WriteLine("Выберите курс:");
+                for (int i = 0; i < courses.Count; i++)
+                    Console.WriteLine($"{i + 1}. {courses[i].Name}");
+                int ci = ReadInt("Номер: ", 1, courses.Count) - 1;
+
+                var c = courses[ci];
+                Console.WriteLine($"Курс: {c.Name}");
+                Console.WriteLine($"Преподаватель: {(c.Teacher != null ? c.Teacher.Fio : "не назначен")}");
+                Console.WriteLine($"Описание: {c.Description}");
+
+                if (c.Students.Count == 0)
+                {
+                    Console.WriteLine("На курсе пока нет студентов.");
+                    return;
+                }
+
+                Console.WriteLine("Список студентов:");
+                foreach (var s in c.Students.OrderBy(x => x.Fio))
+                    Console.WriteLine($"  - [{s.StudentID}] {s.Fio}");
+            }
+            void ShowAllLists()
+            {
+                Console.WriteLine("Все списки: ");
+
+                Console.WriteLine("Студенты: ");
+                if (students.Count == 0) Console.WriteLine("Список студентов пуст.");
+                else foreach (var s in students.OrderBy(x => x.Fio))
+                        Console.WriteLine($"  [{s.StudentID}] {s.Fio}");
+
+                Console.WriteLine("Преподаватели: ");
+                if (teachers.Count == 0) Console.WriteLine("Список преподавателей пуст.");
+                else foreach (var t in teachers.OrderBy(x => x.Fio))
+                        Console.WriteLine($"  [{t.TeacherID}] {t.Fio}");
+
+                Console.WriteLine("Курсы: ");
+                if (courses.Count == 0) Console.WriteLine("Список курсов пуст.");
+                else foreach (var c in courses.OrderBy(x => x.Name))
+                        Console.WriteLine($"  [{c.CourseID}] {c.Name}");
+            }
+            int ReadInt(string prompt, int min, int max)
+            {
+                while (true)
+                {
+                    Console.Write(prompt);
+                    if (int.TryParse(Console.ReadLine(), out int v) && v >= min && v <= max)
+                        return v;
+                    Console.WriteLine($"Введите целое число от {min} до {max}.");
+                }
+            }
+        }
+    }
+}
