@@ -340,7 +340,7 @@ namespace ISIP324_KirshinaNelly
             {
                 while (true)
                 {
-                    Console.WriteLine("Преподователи: ");
+                    Console.WriteLine("Преподаватели: ");
                     Console.WriteLine("1. Добавить преподавателя");
                     Console.WriteLine("2. Показать всех преподавателей");
                     Console.WriteLine("3. Назначить преподавателя на курс");
