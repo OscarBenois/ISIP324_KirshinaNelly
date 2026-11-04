@@ -50,6 +50,43 @@ namespace ISIP324_KirshinaNelly
             public abstract void PrintInfo();
         }
 
+        public class Player : Character
+        {
+            private Weapon weapon;
+            private Armor armor;
+            private bool isFrozen;
+
+            public Player() : base("Игрок", 100, 10, 5) { }
+
+            public Weapon Weapon
+            {
+                get { return weapon; }
+                set { weapon = value; }
+            }
+            public Armor Armor
+            {
+                get { return armor; }
+                set { armor = value; }
+            }
+            public bool IsFrozen
+            {
+                get { return isFrozen; }
+                set { isFrozen = value; }
+            }
+            public int TotalAttack => Weapon == null ? Attack : Attack + Weapon.AttackBonus;
+            public int TotalDefense => Armor == null ? Defense : Defense + Armor.DefenseBonus;
+
+            public override void PrintInfo()
+            {
+                Console.WriteLine($"  {Name}: HP: {Hp}/{MaxHp} | Атака: {TotalAttack} | Защита: {TotalDefense}");
+
+                if (weapon == null) Console.WriteLine("  Оружие: нет");
+                else Console.WriteLine($"  Оружие: {weapon.Name} (+{weapon.AttackBonus})");
+
+                if (armor == null) Console.WriteLine("  Доспех: нет");
+                else Console.WriteLine($"  Доспех: {armor.Name} (+{armor.DefenseBonus})");
+            }
+        }
 
         public abstract class Item
         {
@@ -113,7 +150,7 @@ namespace ISIP324_KirshinaNelly
 
         static void Main(string[] args)
         {
-           
+            
         }
     }
 }
