@@ -50,10 +50,70 @@ namespace ISIP324_KirshinaNelly
             public abstract void PrintInfo();
         }
 
-        
+
+        public abstract class Item
+        {
+            private string name = "";
+            public string Name
+            {
+                get { return name; }
+                protected set { name = value; }
+            }
+            public abstract void PrintInfo();
+        }
+
+        public class Weapon : Item
+        {
+            private int attackBonus;
+            public int AttackBonus
+            {
+                get { return attackBonus; }
+            }
+
+            public Weapon(string name, int attackBonus)
+            {
+                Name = name;
+                this.attackBonus = attackBonus;
+            }
+            public override void PrintInfo()
+            {
+                Console.WriteLine($" {Name} (+{AttackBonus} к атаке)");
+            }
+        }
+
+        public class Armor : Item
+        {
+            private int defenseBonus;
+            public int DefenseBonus
+            {
+                get { return defenseBonus; }
+            }
+            public Armor(string name, int defenseBonus)
+            {
+                Name = name;
+                this.defenseBonus = defenseBonus;
+            }
+            public override void PrintInfo()
+            {
+                Console.WriteLine($" {Name} (+{DefenseBonus} к защите)");
+            }
+        }
+
+        public class Potion : Item
+        {
+            public Potion()
+            {
+                Name = "Лечебное зелье";
+            }
+            public override void PrintInfo()
+            {
+                Console.WriteLine($" {Name}");
+            }
+        }
+
         static void Main(string[] args)
         {
-            
+           
         }
     }
 }
