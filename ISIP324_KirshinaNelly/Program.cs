@@ -118,7 +118,7 @@ namespace ISIP324_KirshinaNelly
             {
                 frozen = false;
                 int damage = Attack;
-                if (randnumb.Next(100) < critChance)
+                if (rng.Next(100) < critChance)
                 {
                     damage = damage * 2;
                     Console.WriteLine($" {Name}: Критический удар!");
@@ -163,7 +163,7 @@ namespace ISIP324_KirshinaNelly
             public Pestov() : base("Пестов С-- (босс)", (int)(25 * 1.3), (int)(7 * 1.8), (int)(3 * 0.6)) { }
             public override int AttackPlayer(out bool frozen)
             {
-                frozen = randnumb.Next(100) < freezeChance;
+                frozen = rng.Next(100) < freezeChance;
                 return Attack;
             }
             public override void PrintInfo()
@@ -187,7 +187,7 @@ namespace ISIP324_KirshinaNelly
             }
             public override int AttackPlayer(out bool frozen)
             {
-                frozen = randnumb.Next(100) < freezeChance;
+                frozen = rng.Next(100) < freezeChance;
                 return Attack;
             }
             public override void PrintInfo()
@@ -262,7 +262,14 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
-       
+        static Player player = new Player();
+        static int turn;
+        static List<Enemy> defeatedEnemies = new List<Enemy>();
+        static Random rng = new Random();
+
+        static string[] WeaponNames = { "Ржавый меч", "Топор", "Стальной меч", "Лук", "Булава" };
+        static string[] ArmorNames = { "Кожаный доспех", "Стальной доспех", "Щит", "Шлем" };
+
         static void Main(string[] args)
         {
             
