@@ -132,7 +132,10 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
-        
+        public class VVG : Goblin
+        {
+            public VVG() : base("ВВГ (босс)", (int)(30 * 2.0), (int)(8 * 1.5), (int)(2 * 1.2), 25 + 10) { }
+        }
 
         public class Skeleton : Enemy
         {
@@ -149,9 +152,26 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
-        
+        public class Kovalsky : Skeleton
+        {
+            public Kovalsky() : base("Ковальский (босс)", (int)(25 * 2.5), (int)(7 * 1.3), (int)(3 * 1.4)) { }
+        }
 
-        
+        public class Pestov : Skeleton
+        {
+            private int freezeChance = 20 * 15;
+            public Pestov() : base("Пестов С-- (босс)", (int)(25 * 1.3), (int)(7 * 1.8), (int)(3 * 0.6)) { }
+            public override int AttackPlayer(out bool frozen)
+            {
+                frozen = randnumb.Next(100) < freezeChance;
+                return Attack;
+            }
+            public override void PrintInfo()
+            {
+                base.PrintInfo();
+                Console.WriteLine($" Шанс заморозки: {freezeChance}%");
+            }
+        }
 
         public class Magician : Enemy
         {
@@ -177,7 +197,10 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
-        
+        public class ArchmagicianCpp : Magician
+        {
+            public ArchmagicianCpp() : base("Архимаг С++ (босс)", (int)(20 * 1.8), (int)(6 * 1.6), (int)(1 * 1.1), 20 + 10) { }
+        }
 
         public abstract class Item
         {
@@ -239,10 +262,10 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
-        
+       
         static void Main(string[] args)
         {
-         
+            
         }
     }
 }
