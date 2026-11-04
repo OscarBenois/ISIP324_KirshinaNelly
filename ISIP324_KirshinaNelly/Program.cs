@@ -88,6 +88,97 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
+        public abstract class Enemy : Character
+        {
+            protected Enemy(string name, int maxhp, int attack, int defense) : base(name, maxhp, attack, defense) { }
+            public abstract bool IgnoresDefense { get; }
+
+            public abstract int AttackPlayer(out bool frozen);
+            public override void PrintInfo()
+            {
+                Console.WriteLine($"  {Name}: HP: {Hp}/{MaxHp} | Атака: {Attack} | Защита: {Defense}");
+                if (IgnoresDefense)
+                    Console.WriteLine("  Особенность: игнорирует защиту игрока");
+            }
+        }
+
+        public class Goblin : Enemy
+        {
+            private int critChance;
+            public Goblin() : this("Гоблин", 30, 8, 2, 25) { }
+            protected Goblin(string name, int maxhp, int attack, int defense, int critChance) : base(name, maxhp, attack, defense)
+            {
+                this.critChance = critChance;
+            }
+            public override bool IgnoresDefense
+            {
+                get { return false; }
+            }
+            public override int AttackPlayer(out bool frozen)
+            {
+                frozen = false;
+                int damage = Attack;
+                if (randnumb.Next(100) < critChance)
+                {
+                    damage = damage * 2;
+                    Console.WriteLine($" {Name}: Критический удар!");
+                }
+                return damage;
+            }
+            public override void PrintInfo()
+            {
+                base.PrintInfo();
+                Console.WriteLine($" Шанс крит урона: {critChance}%");
+            }
+        }
+
+        
+
+        public class Skeleton : Enemy
+        {
+            public Skeleton() : this("Скелет", 25, 7, 3) { }
+            protected Skeleton(string name, int maxhp, int attack, int defense) : base(name, maxhp, attack, defense) { }
+            public override bool IgnoresDefense
+            {
+                get { return true; }
+            }
+            public override int AttackPlayer(out bool frozen)
+            {
+                frozen = false;
+                return Attack;
+            }
+        }
+
+        
+
+        
+
+        public class Magician : Enemy
+        {
+            private int freezeChance;
+            public Magician() : this("Маг", 20, 6, 1, 20) { }
+            protected Magician(string name, int maxhp, int attack, int defense, int freezeChance) : base(name, maxhp, attack, defense)
+            {
+                this.freezeChance = freezeChance;
+            }
+            public override bool IgnoresDefense
+            {
+                get { return false; }
+            }
+            public override int AttackPlayer(out bool frozen)
+            {
+                frozen = randnumb.Next(100) < freezeChance;
+                return Attack;
+            }
+            public override void PrintInfo()
+            {
+                base.PrintInfo();
+                Console.WriteLine($" Шанс заморозки: {freezeChance}%");
+            }
+        }
+
+        
+
         public abstract class Item
         {
             private string name = "";
@@ -148,9 +239,10 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
+        
         static void Main(string[] args)
         {
-            
+         
         }
     }
 }
