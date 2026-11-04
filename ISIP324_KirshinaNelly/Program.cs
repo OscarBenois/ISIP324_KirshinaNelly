@@ -272,7 +272,300 @@ namespace ISIP324_KirshinaNelly
 
         static void Main(string[] args)
         {
-            
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Непредвиденная ошибка: {ex.Message}");
+            }
+        }
+
+        static void Run()
+        {
+            Console.WriteLine("\\РОГАЛИК/");
+            Console.WriteLine("Каждые 10 ходов - босс.");
+
+            player = new Player();
+
+            while (player.IsAlive)
+            {
+                turn = turn + 1;
+                Console.WriteLine($"Ход {turn}");
+                player.PrintInfo();
+
+                if (turn % 10 == 0)
+                {
+                    EncounterBoss();
+                }
+                else
+                {
+                    int eventRoll = rng.Next(2);
+                    if (eventRoll == 0) OpenChest();
+                    else EncounterEnemy();
+                }
+            }
+
+            PrintGameOver();
+        }
+
+        static void PrintGameOver()
+        {
+            Console.WriteLine($"Вас убили. Пройдено ходов: {turn}");
+            Console.WriteLine($"Побеждено врагов: {defeatedEnemies.Count}");
+
+            if (defeatedEnemies.Count > 0)
+            {
+                Console.WriteLine("Статиска:");
+                var groups = defeatedEnemies
+                    .GroupBy(e => e.GetType().Name)
+                    .OrderByDescending(g => g.Count());
+                foreach (var g in groups)
+                {
+                    Console.WriteLine($" {g.Key}: {g.Count()}");
+                }
+            }
+        }
+
+        static void EncounterBoss()
+        {
+            Array values = Enum.GetValues(typeof(BossType));
+            BossType boss = (BossType)values.GetValue(rng.Next(values.Length));
+
+            Enemy enemy = null;
+            switch (boss)
+            {
+                case BossType.ВВГ:
+                    enemy = new VVG();
+                    break;
+                case BossType.Ковальский:
+                    enemy = new Kovalsky();
+                    break;
+                case BossType.АрхимагСрр:
+                    enemy = new ArchmagicianCpp();
+                    break;
+                case BossType.ПестовСмм:
+                    enemy = new Pestov();
+                    break;
+            }
+
+            Console.WriteLine("!БОСС!");
+            Combat(enemy);
+        }
+
+        static void EncounterEnemy()
+        {
+            Array values = Enum.GetValues(typeof(EnemyType));
+            EnemyType type = (EnemyType)values.GetValue(rng.Next(values.Length));
+
+            Enemy enemy = null;
+            switch (type)
+            {
+                case EnemyType.Гоблин:
+                    enemy = new Goblin();
+                    break;
+                case EnemyType.Скелет:
+                    enemy = new Skeleton();
+                    break;
+                case EnemyType.Маг:
+                    enemy = new Magician();
+                    break;
+            }
+            Combat(enemy);
+        }
+
+        static void OpenChest()
+        {
+            Console.WriteLine("Вы нашли сундук!");
+
+            Array values = Enum.GetValues(typeof(ChestLoot));
+            ChestLoot loot = (ChestLoot)values.GetValue(rng.Next(values.Length));
+
+            switch (loot)
+            {
+                case ChestLoot.ЛечебноеЗелье:
+                    player.Heal(player.MaxHp);
+                    Console.WriteLine("Вы нашли лечебное зелье. HP полностью восстановлено");
+                    break;
+                case ChestLoot.Оружие:
+                    TryEquipWeapon();
+                    break;
+                case ChestLoot.Доспех:
+                    TryEquipArmor();
+                    break;
+            }
+        }
+
+        static void TryEquipWeapon()
+        {
+            string name = WeaponNames[rng.Next(WeaponNames.Length)];
+            int bonus = rng.Next(2, 9);
+            Weapon w = new Weapon(name, bonus);
+
+            Console.WriteLine("Внутри оружие.");
+            Console.WriteLine("Новое: ");
+            w.PrintInfo();
+
+            Console.WriteLine("Текущее: ");
+            if (player.Weapon != null) player.Weapon.PrintInfo();
+            else Console.WriteLine("нет");
+            if (AskYesNo("Взять новое оружие?"))
+            {
+                player.Weapon = w;
+                Console.WriteLine("Оружие заменено.");
+            }
+            else
+            {
+                Console.WriteLine("Вы выбросили предмет.");
+            }
+        }
+
+        static void TryEquipArmor()
+        {
+            string name = ArmorNames[rng.Next(ArmorNames.Length)];
+            int bonus = rng.Next(1, 6);
+            Armor a = new Armor(name, bonus);
+
+            Console.WriteLine("Внутри доспех.");
+            Console.WriteLine("Новый: ");
+            a.PrintInfo();
+
+            Console.WriteLine("Текущий: ");
+            if (player.Armor != null) player.Armor.PrintInfo();
+            else Console.WriteLine("нет");
+
+            if (AskYesNo("Взять новый доспех?"))
+            {
+                player.Armor = a;
+                Console.WriteLine("Доспех заменён.");
+            }
+            else
+            {
+                Console.WriteLine("Вы выбросили доспех.");
+            }
+        }
+
+        static void Combat(Enemy enemy)
+        {
+            Console.WriteLine($"Бой с {enemy.Name}");
+            enemy.PrintInfo();
+
+            while (enemy.IsAlive && player.IsAlive)
+            {
+                Console.WriteLine($"\nHP: вы {player.Hp}/{player.MaxHp} | {enemy.Name} {enemy.Hp}/{enemy.MaxHp}");
+                if (player.IsFrozen)
+                {
+                    Console.WriteLine("Вы заморожены. Пропуск хода.");
+                    player.IsFrozen = false;
+                    EnemyAttack(enemy, false);
+                    continue;
+                }
+                CombatAction action = ReadCombatAction();
+                if (action == CombatAction.Атака)
+                {
+                    int dmg = player.TotalAttack - enemy.Defense;
+                    if (dmg < 1) dmg = 1;
+                    enemy.TakeDamage(dmg);
+                    Console.WriteLine($"Вы нанесли {dmg} урона.");
+                }
+                else
+                {
+                    Console.WriteLine("Вы готовитесь защищаться.");
+                }
+                if (enemy.IsAlive)
+                {
+                    bool defending = (action == CombatAction.Защита);
+                    EnemyAttack(enemy, defending);
+                }
+            }
+            if (player.IsAlive)
+            {
+                Console.WriteLine($"Победа над {enemy.Name}!");
+                defeatedEnemies.Add(enemy);
+                player.IsFrozen = false;
+            }
+            else
+            {
+                Console.WriteLine($"{enemy.Name} убивает вас.");
+            }
+        }
+
+        static void EnemyAttack(Enemy enemy, bool defending)
+        {
+            if (defending)
+            {
+                int dodgeRoll = rng.Next(100);
+                if (dodgeRoll < 40)
+                {
+                    Console.WriteLine($"{enemy.Name} атакует. Вы уклонились!");
+                    return;
+                }
+            }
+
+            bool frozen;
+            int rawDmg = enemy.AttackPlayer(out frozen);
+            int finalDmg = rawDmg;
+            if (enemy.IgnoresDefense == false)
+            {
+                finalDmg = finalDmg - player.TotalDefense;
+                if (finalDmg < 0) finalDmg = 0;
+
+                if (defending)
+                {
+                    int blockPercent = rng.Next(70, 101);
+                    int blockAmount = player.TotalDefense * blockPercent / 100;
+                    finalDmg = finalDmg - blockAmount;
+                    if (finalDmg < 0) finalDmg = 0;
+                    Console.WriteLine($"Блок {blockPercent}%: -{blockAmount} урона");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"{enemy.Name} игнорирует вашу защиту.");
+            }
+
+            player.TakeDamage(finalDmg);
+            Console.WriteLine($"{enemy.Name} наносит {finalDmg} урона. Ваше HP: {player.Hp}/{player.MaxHp}");
+
+            if (frozen)
+            {
+                player.IsFrozen = true;
+                Console.WriteLine("Вы заморожены. Следующий ход прорущен.");
+            }
+        }
+
+        static CombatAction ReadCombatAction()
+        {
+            while (true)
+            {
+                Console.WriteLine("1. Атака");
+                Console.WriteLine("2. Защита (40% уклониться, иначе блок 70-100% защиты");
+                Console.WriteLine("Выбор: ");
+                int v;
+                if (int.TryParse(Console.ReadLine(), out v))
+                {
+                    if (v == 1) return CombatAction.Атака;
+                    if (v == 2) return CombatAction.Защита;
+                }
+                Console.WriteLine("Ошибка ввода. Поопробуйте снова");
+            }
+        }
+
+        static bool AskYesNo(string question)
+        {
+            while (true)
+            {
+                Console.WriteLine($"{question} (y/n): ");
+                string a = Console.ReadLine();
+                if (a == null) a = "";
+                a = a.Trim().ToLower();
+
+                if (a == "y") return true;
+                if (a == "n") return false;
+
+                Console.WriteLine("Введите y или n.");
+            }
         }
     }
 }
