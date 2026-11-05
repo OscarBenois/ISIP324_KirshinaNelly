@@ -193,7 +193,7 @@ namespace ISIP324_KirshinaNelly
             public override void PrintInfo()
             {
                 base.PrintInfo();
-                Console.WriteLine($" Шанс заморозки: {freezeChance}%");
+                Console.WriteLine($"Шанс заморозки: {freezeChance}%");
             }
         }
 
@@ -271,18 +271,6 @@ namespace ISIP324_KirshinaNelly
         static string[] ArmorNames = { "Кожаный доспех", "Стальной доспех", "Щит", "Шлем" };
 
         static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Непредвиденная ошибка: {ex.Message}");
-            }
-        }
-
-        static void Run()
         {
             Console.WriteLine("\рогалик/");
             Console.WriteLine("Каждые 10 ходов будет босс :)");
