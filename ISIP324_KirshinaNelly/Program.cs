@@ -177,7 +177,8 @@ namespace ISIP324_KirshinaNelly
         {
             private int freezeChance;
             public Magician() : this("Маг", 20, 6, 1, 20) { }
-            protected Magician(string name, int maxhp, int attack, int defense, int freezeChance) : base(name, maxhp, attack, defense)
+            protected Magician(string name, int maxhp, int attack, int defense, int freezeChance) 
+                : base(name, maxhp, attack, defense)
             {
                 this.freezeChance = freezeChance;
             }
