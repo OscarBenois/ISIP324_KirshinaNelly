@@ -80,11 +80,11 @@ namespace ISIP324_KirshinaNelly
             {
                 Console.WriteLine($"  {Name}: HP: {Hp}/{MaxHp} | Атака: {TotalAttack} | Защита: {TotalDefense}");
 
-                if (weapon == null) Console.WriteLine("  Оружие: нет");
-                else Console.WriteLine($"  Оружие: {weapon.Name} (+{weapon.AttackBonus})");
+                if (weapon == null) Console.WriteLine("Оружие: нет");
+                else Console.WriteLine($"Оружие: {weapon.Name} (+{weapon.AttackBonus})");
 
-                if (armor == null) Console.WriteLine("  Доспех: нет");
-                else Console.WriteLine($"  Доспех: {armor.Name} (+{armor.DefenseBonus})");
+                if (armor == null) Console.WriteLine("Доспех: нет");
+                else Console.WriteLine($"Доспех: {armor.Name} (+{armor.DefenseBonus})");
             }
         }
 
@@ -96,9 +96,9 @@ namespace ISIP324_KirshinaNelly
             public abstract int AttackPlayer(out bool frozen);
             public override void PrintInfo()
             {
-                Console.WriteLine($"  {Name}: HP: {Hp}/{MaxHp} | Атака: {Attack} | Защита: {Defense}");
+                Console.WriteLine($"{Name}: HP: {Hp}/{MaxHp} | Атака: {Attack} | Защита: {Defense}");
                 if (IgnoresDefense)
-                    Console.WriteLine("  Особенность: игнорирует защиту игрока");
+                    Console.WriteLine("Особенность: игнорирует защиту игрока");
             }
         }
 
@@ -118,7 +118,7 @@ namespace ISIP324_KirshinaNelly
             {
                 frozen = false;
                 int damage = Attack;
-                if (rng.Next(100) < critChance)
+                if (randnumb.Next(100) < critChance)
                 {
                     damage = damage * 2;
                     Console.WriteLine($" {Name}: Критический удар!");
@@ -128,7 +128,7 @@ namespace ISIP324_KirshinaNelly
             public override void PrintInfo()
             {
                 base.PrintInfo();
-                Console.WriteLine($" Шанс крит урона: {critChance}%");
+                Console.WriteLine($"Шанс крит урона: {critChance}%");
             }
         }
 
@@ -163,13 +163,13 @@ namespace ISIP324_KirshinaNelly
             public Pestov() : base("Пестов С-- (босс)", Convert.ToInt32(25 * 1.3), Convert.ToInt32(7 * 1.8), Convert.ToInt32(3 * 0.6)) { }
             public override int AttackPlayer(out bool frozen)
             {
-                frozen = rng.Next(100) < freezeChance;
+                frozen = randnumb.Next(100) < freezeChance;
                 return Attack;
             }
             public override void PrintInfo()
             {
                 base.PrintInfo();
-                Console.WriteLine($" Шанс заморозки: {freezeChance}%");
+                Console.WriteLine($"Шанс заморозки: {freezeChance}%");
             }
         }
 
@@ -187,7 +187,7 @@ namespace ISIP324_KirshinaNelly
             }
             public override int AttackPlayer(out bool frozen)
             {
-                frozen = rng.Next(100) < freezeChance;
+                frozen = randnumb.Next(100) < freezeChance;
                 return Attack;
             }
             public override void PrintInfo()
@@ -228,7 +228,7 @@ namespace ISIP324_KirshinaNelly
             }
             public override void PrintInfo()
             {
-                Console.WriteLine($" {Name} (+{AttackBonus} к атаке)");
+                Console.WriteLine($"{Name} (+{AttackBonus} к атаке)");
             }
         }
 
@@ -246,7 +246,7 @@ namespace ISIP324_KirshinaNelly
             }
             public override void PrintInfo()
             {
-                Console.WriteLine($" {Name} (+{DefenseBonus} к защите)");
+                Console.WriteLine($"{Name} (+{DefenseBonus} к защите)");
             }
         }
 
@@ -265,9 +265,9 @@ namespace ISIP324_KirshinaNelly
         static Player player = new Player();
         static int turn;
         static List<Enemy> defeatedEnemies = new List<Enemy>();
-        static Random rng = new Random();
+        static Random randnumb = new Random();
 
-        static string[] WeaponNames = { "Ржавый меч", "Топор", "Стальной меч", "Лук", "Булава" };
+        static string[] WeaponNames = { "Ржавый меч", "Топор", "Стальной меч", "Лук" };
         static string[] ArmorNames = { "Кожаный доспех", "Стальной доспех", "Щит", "Шлем" };
 
         static void Main(string[] args)
@@ -284,8 +284,8 @@ namespace ISIP324_KirshinaNelly
 
         static void Run()
         {
-            Console.WriteLine("\\РОГАЛИК/");
-            Console.WriteLine("Каждые 10 ходов - босс.");
+            Console.WriteLine("\рогалик/");
+            Console.WriteLine("Каждые 10 ходов будет босс :)");
 
             player = new Player();
 
@@ -301,7 +301,7 @@ namespace ISIP324_KirshinaNelly
                 }
                 else
                 {
-                    int eventRoll = rng.Next(2);
+                    int eventRoll = randnumb.Next(2);
                     if (eventRoll == 0) OpenChest();
                     else EncounterEnemy();
                 }
@@ -331,7 +331,7 @@ namespace ISIP324_KirshinaNelly
         static void EncounterBoss()
         {
             Array values = Enum.GetValues(typeof(BossType));
-            BossType boss = (BossType)values.GetValue(rng.Next(values.Length));
+            BossType boss = (BossType)values.GetValue(randnumb.Next(values.Length));
 
             Enemy enemy = null;
             switch (boss)
@@ -350,14 +350,14 @@ namespace ISIP324_KirshinaNelly
                     break;
             }
 
-            Console.WriteLine("!БОСС!");
+            Console.WriteLine("!Босс!");
             Combat(enemy);
         }
 
         static void EncounterEnemy()
         {
             Array values = Enum.GetValues(typeof(EnemyType));
-            EnemyType type = (EnemyType)values.GetValue(rng.Next(values.Length));
+            EnemyType type = (EnemyType)values.GetValue(randnumb.Next(values.Length));
 
             Enemy enemy = null;
             switch (type)
@@ -380,7 +380,7 @@ namespace ISIP324_KirshinaNelly
             Console.WriteLine("Вы нашли сундук!");
 
             Array values = Enum.GetValues(typeof(ChestLoot));
-            ChestLoot loot = (ChestLoot)values.GetValue(rng.Next(values.Length));
+            ChestLoot loot = (ChestLoot)values.GetValue(randnumb.Next(values.Length));
 
             switch (loot)
             {
@@ -399,8 +399,8 @@ namespace ISIP324_KirshinaNelly
 
         static void TryEquipWeapon()
         {
-            string name = WeaponNames[rng.Next(WeaponNames.Length)];
-            int bonus = rng.Next(2, 9);
+            string name = WeaponNames[randnumb.Next(WeaponNames.Length)];
+            int bonus = randnumb.Next(2, 9);
             Weapon w = new Weapon(name, bonus);
 
             Console.WriteLine("Внутри оружие.");
@@ -423,8 +423,8 @@ namespace ISIP324_KirshinaNelly
 
         static void TryEquipArmor()
         {
-            string name = ArmorNames[rng.Next(ArmorNames.Length)];
-            int bonus = rng.Next(1, 6);
+            string name = ArmorNames[randnumb.Next(ArmorNames.Length)];
+            int bonus = randnumb.Next(1, 6);
             Armor a = new Armor(name, bonus);
 
             Console.WriteLine("Внутри доспех.");
@@ -453,7 +453,7 @@ namespace ISIP324_KirshinaNelly
 
             while (enemy.IsAlive && player.IsAlive)
             {
-                Console.WriteLine($"\nHP: вы {player.Hp}/{player.MaxHp} | {enemy.Name} {enemy.Hp}/{enemy.MaxHp}");
+                Console.WriteLine($"HP: вы {player.Hp}/{player.MaxHp} | {enemy.Name} {enemy.Hp}/{enemy.MaxHp}");
                 if (player.IsFrozen)
                 {
                     Console.WriteLine("Вы заморожены. Пропуск хода.");
@@ -495,7 +495,7 @@ namespace ISIP324_KirshinaNelly
         {
             if (defending)
             {
-                int dodgeRoll = rng.Next(100);
+                int dodgeRoll = randnumb.Next(100);
                 if (dodgeRoll < 40)
                 {
                     Console.WriteLine($"{enemy.Name} атакует. Вы уклонились!");
@@ -513,7 +513,7 @@ namespace ISIP324_KirshinaNelly
 
                 if (defending)
                 {
-                    int blockPercent = rng.Next(70, 101);
+                    int blockPercent = randnumb.Next(70, 101);
                     int blockAmount = player.TotalDefense * blockPercent / 100;
                     finalDmg = finalDmg - blockAmount;
                     if (finalDmg < 0) finalDmg = 0;
@@ -540,7 +540,7 @@ namespace ISIP324_KirshinaNelly
             while (true)
             {
                 Console.WriteLine("1. Атака");
-                Console.WriteLine("2. Защита (40% уклониться, иначе блок 70-100% защиты");
+                Console.WriteLine("2. Защита");
                 Console.WriteLine("Выбор: ");
                 int v;
                 if (int.TryParse(Console.ReadLine(), out v))
