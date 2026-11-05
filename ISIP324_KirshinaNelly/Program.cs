@@ -272,7 +272,7 @@ namespace ISIP324_KirshinaNelly
 
         static void Main(string[] args)
         {
-            Console.WriteLine("\рогалик/");
+            Console.WriteLine("/рогалик/");
             Console.WriteLine("Каждые 10 ходов будет босс :)");
 
             player = new Player();
@@ -285,13 +285,13 @@ namespace ISIP324_KirshinaNelly
 
                 if (turn % 10 == 0)
                 {
-                    EncounterBoss();
+                    ConfrontBoss();
                 }
                 else
                 {
                     int eventRoll = randnumb.Next(2);
                     if (eventRoll == 0) OpenChest();
-                    else EncounterEnemy();
+                    else ConfrontEnemy();
                 }
             }
 
@@ -316,7 +316,7 @@ namespace ISIP324_KirshinaNelly
             }
         }
 
-        static void EncounterBoss()
+        static void ConfrontBoss()
         {
             Array values = Enum.GetValues(typeof(BossType));
             BossType boss = (BossType)values.GetValue(randnumb.Next(values.Length));
@@ -342,7 +342,7 @@ namespace ISIP324_KirshinaNelly
             Combat(enemy);
         }
 
-        static void EncounterEnemy()
+        static void ConfrontEnemy()
         {
             Array values = Enum.GetValues(typeof(EnemyType));
             EnemyType type = (EnemyType)values.GetValue(randnumb.Next(values.Length));
